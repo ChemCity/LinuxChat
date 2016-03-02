@@ -7,7 +7,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <fcntl.h>
 #include <arpa/inet.h>
+
 #include <unistd.h>
 
 #define SERVER_TCP_PORT		7000	// Default port
