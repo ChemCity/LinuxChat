@@ -7,7 +7,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <fcntl.h>
 #include <arpa/inet.h>
+
 #include <unistd.h>
 
 #define SERVER_TCP_PORT		7000	// Default port
@@ -16,11 +18,12 @@
 //DONT FORGET TO ADD COMMAND LINE ARGUMENT FOR CHAT SESSION FILE DUMP
 int main (int argc, char **argv){
 	int n, bytes_to_read;
-	int sd, port;
+	int sd, port, file;
 	struct hostent	*hp;
 	struct sockaddr_in server;
 	char  *host, *bp, rbuf[BUFLEN], tempbuf[BUFLEN], sbuf[BUFLEN], **pptr, *name;
 	char str[16];
+	
 
 	switch(argc){
 		case 3:
@@ -31,10 +34,11 @@ int main (int argc, char **argv){
 		case 4:
 			host =	argv[1];
 			name =  argv[2];
-			port =	atoi(argv[3]);	// User specified port
+			file = creat(argv[3], O_RDWR);
+			port =	SERVER_TCP_PORT;
 		break;
 		default:
-			fprintf(stderr, "Usage: %s host username [port]\n", argv[0]);
+			fprintf(stderr, "Usage: %s host username [file]\n", argv[0]);
 			exit(1);
 	}
 
@@ -70,6 +74,7 @@ int main (int argc, char **argv){
 			fgets (tempbuf, BUFLEN, stdin);
 			sprintf(sbuf,"%s: %s",name, tempbuf);
 			// Transmit data through the socket
+			write(file, sbuf, BUFLEN);
 			send (sd, sbuf, BUFLEN, 0);
 		}
 	} else {
@@ -85,7 +90,8 @@ int main (int argc, char **argv){
 				bytes_to_read -= n;
 			}
 			// MAKE SMALL CHANGE HERE AS WELL
-			printf ("%s\n", rbuf);
+			printf ("%s", rbuf);
+			write(file, rbuf, BUFLEN);
 			fflush(stdout);
 		}
 	}
