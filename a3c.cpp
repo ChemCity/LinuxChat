@@ -1,4 +1,4 @@
-
+#include <string.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <sys/types.h>
@@ -9,21 +9,24 @@
 #include <strings.h>
 #include <fcntl.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #include <unistd.h>
 
 #define SERVER_TCP_PORT		7000	// Default port
 #define BUFLEN			80  	// Buffer length
 
-//DONT FORGET TO ADD COMMAND LINE ARGUMENT FOR CHAT SESSION FILE DUMP
+
 int main (int argc, char **argv){
+	time_t t = time(NULL);
+	struct tm *tm;
 	int n, bytes_to_read;
 	int sd, port, file;
 	struct hostent	*hp;
 	struct sockaddr_in server;
 	char  *host, *bp, rbuf[BUFLEN], tempbuf[BUFLEN], sbuf[BUFLEN], **pptr, *name;
 	char str[16];
-	
+
 
 	switch(argc){
 		case 3:
@@ -65,15 +68,17 @@ int main (int argc, char **argv){
 	printf("Connected:    Server Name: %s\n", hp->h_name);
 	pptr = hp->h_addr_list;
 	printf("\t\tIP Address: %s\n", inet_ntop(hp->h_addrtype, *pptr, str, sizeof(str)));
-	
-	
+
+
 	if(fork() == 0){
 		//Sending process
 		while(1){
-			// MAKE SMALL CHANGE HERE
+
 			fgets (tempbuf, BUFLEN, stdin);
 			sprintf(sbuf,"%s: %s",name, tempbuf);
 			// Transmit data through the socket
+			tm = localtime(&t);
+			write(file, asctime(tm), strlen(asctime(tm)));
 			write(file, sbuf, BUFLEN);
 			send (sd, sbuf, BUFLEN, 0);
 		}
@@ -89,8 +94,10 @@ int main (int argc, char **argv){
 				bp += n;
 				bytes_to_read -= n;
 			}
-			// MAKE SMALL CHANGE HERE AS WELL
+
 			printf ("%s", rbuf);
+			tm = localtime(&t);
+			write(file, asctime(tm), strlen(asctime(tm)));
 			write(file, rbuf, BUFLEN);
 			fflush(stdout);
 		}
