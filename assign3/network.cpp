@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 
 int file = 0;
-int sd;
+int sd, connected;
 char name[BUFLEN];
 time_t t;
 struct tm *tm;
@@ -15,7 +15,8 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
 
   window = w;
   sprintf(name,username);
-
+  connected = 1;
+  
   if(fileName != NULL){
     file = creat(fileName, O_RDWR);
   }
@@ -51,7 +52,7 @@ void receiveFromServer(){
   char *bp, rbuf[BUFLEN];
   int bytes_to_read, n;
 
-  while(1){
+  while(connected){
     bp = rbuf;
     bytes_to_read = BUFLEN;
 
@@ -77,7 +78,8 @@ void sendToServer(const char *msg){
   char sbuf[BUFLEN];
   sprintf(sbuf,"%s: %s",name, msg);
   send (sd, sbuf, BUFLEN, 0);
-
+  window->Print(rbuf);	
+	
   if(file){
     t = time(NULL);
     tm = localtime(&t);
@@ -91,5 +93,6 @@ void disconnect(){
     if(file){
         close(file);
     }
+	connected = 0;
     close(sd);
 }

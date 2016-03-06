@@ -32,7 +32,6 @@ void MainWindow::SendData() {
     //handle sending the message to the server here
     sendToServer(msg.c_str());
 
-    ui->chatWindow->append(text);
     ui->sendWindow->clear();
 }
 
