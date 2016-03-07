@@ -15,6 +15,7 @@
 #include <time.h>
 #include <thread>
 #include <unistd.h>
+#include <atomic>
 #include "mainwindow.h"
 
 
@@ -24,6 +25,6 @@
 void sendToServer(const char *msg);
 void receiveFromServer();
 void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName);
-void disconnect();
+void disconnectClient();
 
 #endif //NETWORK_H
