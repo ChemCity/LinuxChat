@@ -32,6 +32,7 @@ void MainWindow::SendData() {
     //handle sending the message to the server here
     sendToServer(msg.c_str());
 
+    ui->chatWindow->append(text);
     ui->sendWindow->clear();
 }
 
@@ -77,10 +78,9 @@ void MainWindow::updateStatusMessage(const QString &msg) {
 
 void MainWindow::OnDisconnectReleased()
 {
-    disconnect();
-
+	
+    	disconnectClient();
     if (getWindowState() == WINDOW_CHATSCREEN) {
-        //handle disconnecting from the server here
         changeWindowState(WINDOW_WELCOME);
     }
 }
@@ -122,6 +122,10 @@ int MainWindow::getWindowState() {
     if (ui->chatWindow->isHidden())
         return WINDOW_WELCOME;
     return WINDOW_CHATSCREEN;
+}
+
+void MainWindow::popup(const char * cc) {
+        QMessageBox::information(this, tr("Chat Client"), tr(cc));
 }
 
 MainWindow::~MainWindow()

@@ -23,6 +23,7 @@ public:
     void Print(char *msg);
     void updateStatusMessage(const QString &msg);
     void changeWindowState(int welcomeScreen);
+    void popup(const char * cc);
     ~MainWindow();
 
 

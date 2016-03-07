@@ -2,10 +2,11 @@
 #include "mainwindow.h"
 
 int file = 0;
-int sd, connected;
+int sd;
 char name[BUFLEN];
 time_t t;
 struct tm *tm;
+std::atomic_bool SERVER_DISCONNECT (false);
 
 MainWindow *window;
 
@@ -15,8 +16,8 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
 
   window = w;
   sprintf(name,username);
-  connected = 1;
-  
+	    close(sd);
+
   if(fileName != NULL){
     file = creat(fileName, O_RDWR);
   }
@@ -43,6 +44,8 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
     window->successfulConnection();
   }
 
+
+  SERVER_DISCONNECT = true;
   std::thread t1(receiveFromServer);
   t1.detach();
 
@@ -52,13 +55,13 @@ void receiveFromServer(){
   char *bp, rbuf[BUFLEN];
   int bytes_to_read, n;
 
-  while(connected){
+  while(!SERVER_DISCONNECT){
     bp = rbuf;
     bytes_to_read = BUFLEN;
 
     // client makes repeated calls to recv until no more data is expected to arrive.
     n = 0;
-    while ((n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN){
+    while (!SERVER_DISCONNECT && ((n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN)){
       bp += n;
       bytes_to_read -= n;
     }
@@ -72,14 +75,17 @@ void receiveFromServer(){
       write(file, rbuf, strlen(rbuf));
     }
   }
+	if (SERVER_DISCONNECT) {
+	    close(sd);
+	}
 }
 
 void sendToServer(const char *msg){
   char sbuf[BUFLEN];
   sprintf(sbuf,"%s: %s",name, msg);
   send (sd, sbuf, BUFLEN, 0);
-  window->Print(rbuf);	
-	
+
+
   if(file){
     t = time(NULL);
     tm = localtime(&t);
@@ -89,10 +95,10 @@ void sendToServer(const char *msg){
   }
 }
 
-void disconnect(){
+void disconnectClient(){
     if(file){
         close(file);
     }
-	connected = 0;
-    close(sd);
+    SERVER_DISCONNECT = true;
+	    close(sd);
 }
