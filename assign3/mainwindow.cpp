@@ -31,7 +31,9 @@ void MainWindow::SendData() {
     std::string msg (text.toUtf8().constData());
     sendToServer(msg.c_str());
 
-    ShowChatMessage(ui->nameWindow->text() + ": " + text, true);
+    ui->sendWindow->moveCursor(QTextCursor::Start);
+    ui->sendWindow->insertPlainText(ui->nameWindow->text() + ": ");
+    ShowChatMessage(ui->sendWindow->toHtml(), true);
     ui->sendWindow->clear();
 }
 
@@ -39,11 +41,15 @@ void MainWindow::ShowChatMessage(char *msg, bool local) {
   QString text = QString(msg);
   ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + text + "</div>");
   ui->chatWindow->append("");
+
+  ui->chatWindow->ensureCursorVisible();
 }
 
 void MainWindow::ShowChatMessage(QString text, bool local) {
     ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + text + "</div>");
     ui->chatWindow->append("");
+
+    ui->chatWindow->ensureCursorVisible();
 }
 
 void MainWindow::OnConnectReleased()
@@ -131,6 +137,11 @@ int MainWindow::getWindowState() {
 
 void MainWindow::popup(const char * cc) {
         QMessageBox::information(this, tr("Chat Client"), tr(cc));
+}
+
+
+void MainWindow::popup(QString cc) {
+        QMessageBox::information(this, tr("Chat Client"), cc);
 }
 
 MainWindow::~MainWindow()

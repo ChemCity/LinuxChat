@@ -25,6 +25,7 @@ public:
     void updateStatusMessage(const QString &msg);
     void changeWindowState(int welcomeScreen);
     void popup(const char * cc);
+    void popup(QString cc);
     ~MainWindow();
 
 
