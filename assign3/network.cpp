@@ -45,7 +45,7 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
   }
 
 
-  SERVER_DISCONNECT = true;
+  SERVER_DISCONNECT = false;
   std::thread t1(receiveFromServer);
   t1.detach();
 
