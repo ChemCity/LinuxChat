@@ -25,6 +25,10 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
     perror("Cannot create socket");
     exit(1);
   }
+  
+  int flags = fcntl(fd, F_GETFL, 0);
+  fcntl(fd, F_SETFL, flags|O_NONBLOCK);
+  
   bzero((char *)&server, sizeof(struct sockaddr_in));
   server.sin_family = AF_INET;
   server.sin_port = htons(port);
@@ -59,6 +63,12 @@ void receiveFromServer(){
     // client makes repeated calls to recv until no more data is expected to arrive.
     n = 0;
     while ((n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN){
+	  if(n == -1){
+		if(bytes_to_read == BUFLEN){
+			break;
+		}
+		n = 0;
+	  }
       bp += n;
       bytes_to_read -= n;
     }
@@ -72,6 +82,7 @@ void receiveFromServer(){
       write(file, rbuf, strlen(rbuf));
     }
   }
+  close(sd);
 }
 
 void sendToServer(const char *msg){
@@ -89,10 +100,9 @@ void sendToServer(const char *msg){
   }
 }
 
-void disconnect(){
+void disconnectClient(){
     if(file){
         close(file);
     }
 	connected = 0;
-    close(sd);
 }

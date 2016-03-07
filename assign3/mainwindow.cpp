@@ -77,7 +77,7 @@ void MainWindow::updateStatusMessage(const QString &msg) {
 
 void MainWindow::OnDisconnectReleased()
 {
-    disconnect();
+    disconnectClient();
 
     if (getWindowState() == WINDOW_CHATSCREEN) {
         //handle disconnecting from the server here
