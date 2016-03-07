@@ -23,23 +23,22 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
   }
 
   if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1){
-    perror("Cannot create socket");
-    exit(1);
+      window->updateStatusMessage("Cannot Create Socket");
+      return;
   }
   bzero((char *)&server, sizeof(struct sockaddr_in));
   server.sin_family = AF_INET;
   server.sin_port = htons(port);
   if ((hp = gethostbyname(IP)) == NULL){
-    fprintf(stderr, "Unknown server address\n");
-    exit(1);
+      window->updateStatusMessage("Unknown Server Address");
+      return;
   }
   bcopy(hp->h_addr, (char *)&server.sin_addr, hp->h_length);
 
   // Connecting to the server
   if (connect (sd, (struct sockaddr *)&server, sizeof(server)) == -1){
-    fprintf(stderr, "Can't connect to server\n");
-    perror("connect");
-    exit(1);
+      window->updateStatusMessage("Cannot Connect to Server");
+      return;
   }else{
     window->successfulConnection();
   }
@@ -66,7 +65,7 @@ void receiveFromServer(){
       bytes_to_read -= n;
     }
 
-    window->Print(rbuf);
+    window->ShowChatMessage(rbuf, false);
 
     if(file){
       t  = time(NULL);

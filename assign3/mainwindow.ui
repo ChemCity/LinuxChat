@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>588</height>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -211,6 +211,18 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>nameWindow</tabstop>
+  <tabstop>ipWindow</tabstop>
+  <tabstop>portWindow</tabstop>
+  <tabstop>logChatCheck</tabstop>
+  <tabstop>logfileWindow</tabstop>
+  <tabstop>connectButton</tabstop>
+  <tabstop>sendWindow</tabstop>
+  <tabstop>sendButton</tabstop>
+  <tabstop>disconnectButton</tabstop>
+  <tabstop>chatWindow</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
