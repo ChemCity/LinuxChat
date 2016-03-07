@@ -1,6 +1,6 @@
 # LinuxChat
 
-install qt-devel and qt-creater
+install qt-devel and qt-creator
 
 to compile client:
 
