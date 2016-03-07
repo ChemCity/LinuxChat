@@ -29,16 +29,21 @@ void MainWindow::SendData() {
     }
     QString text = ui->sendWindow->toPlainText();
     std::string msg (text.toUtf8().constData());
-    //handle sending the message to the server here
     sendToServer(msg.c_str());
 
-    ui->chatWindow->append(text);
+    ShowChatMessage(ui->nameWindow->text() + ": " + text, true);
     ui->sendWindow->clear();
 }
 
-void MainWindow::Print(char *msg){
+void MainWindow::ShowChatMessage(char *msg, bool local) {
   QString text = QString(msg);
-  ui->chatWindow->append(text);
+  ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + text + "</div>");
+  ui->chatWindow->append("");
+}
+
+void MainWindow::ShowChatMessage(QString text, bool local) {
+    ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + text + "</div>");
+    ui->chatWindow->append("");
 }
 
 void MainWindow::OnConnectReleased()
@@ -55,19 +60,16 @@ void MainWindow::OnConnectReleased()
         QMessageBox::information(this, tr("Chat Client"), tr("Enter a port number!"));
         return;
     }
+    updateStatusMessage("Attempting to Connect...");
     std::string username(ui->nameWindow->text().toUtf8().constData());
     std::string IP(ui->ipWindow->text().toUtf8().constData());
     int port = atoi(ui->portWindow->text().toUtf8().constData());
     std::string filePath((ui->logChatCheck->isChecked()) ? ui->logfileWindow->text().toUtf8().constData() : "NULL");
 
     startConnection(this, username.c_str(), IP.c_str(), port, filePath.c_str());
-    //handle connecting to the server here
-    //use the above 3 strings as parameters for connection
 
-    updateStatusMessage("Attempting to Connect...");
 }
 
-//this function must be called on a successful connection.
 void MainWindow::successfulConnection() {
     changeWindowState(WINDOW_CHATSCREEN);
 }
@@ -78,8 +80,7 @@ void MainWindow::updateStatusMessage(const QString &msg) {
 
 void MainWindow::OnDisconnectReleased()
 {
-	
-    	disconnectClient();
+    disconnectClient();
     if (getWindowState() == WINDOW_CHATSCREEN) {
         changeWindowState(WINDOW_WELCOME);
     }
@@ -97,6 +98,8 @@ void MainWindow::changeWindowState(int welcomeScreen) {
         ui->ipWindow->show();
         ui->portWindow->show();
         ui->welcomeLabel->show();
+        ui->logChatCheck->show();
+        ui->logfileWindow->show();
         updateStatusMessage("");
         ui->statusMessage->show();
         ui->loginGrid->layout()->setMargin(100);
@@ -112,6 +115,8 @@ void MainWindow::changeWindowState(int welcomeScreen) {
         ui->ipWindow->hide();
         ui->portWindow->hide();
         ui->welcomeLabel->hide();
+        ui->logChatCheck->hide();
+        ui->logfileWindow->hide();
         ui->statusMessage->hide();
         ui->loginGrid->layout()->setMargin(0);
     break;

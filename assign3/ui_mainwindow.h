@@ -58,7 +58,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setEnabled(true);
-        MainWindow->resize(710, 588);
+        MainWindow->resize(710, 674);
         MainWindow->setWindowOpacity(1);
         MainWindow->setDocumentMode(false);
         centralWidget = new QWidget(MainWindow);
@@ -166,6 +166,15 @@ public:
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+        QWidget::setTabOrder(nameWindow, ipWindow);
+        QWidget::setTabOrder(ipWindow, portWindow);
+        QWidget::setTabOrder(portWindow, logChatCheck);
+        QWidget::setTabOrder(logChatCheck, logfileWindow);
+        QWidget::setTabOrder(logfileWindow, connectButton);
+        QWidget::setTabOrder(connectButton, sendWindow);
+        QWidget::setTabOrder(sendWindow, sendButton);
+        QWidget::setTabOrder(sendButton, disconnectButton);
+        QWidget::setTabOrder(disconnectButton, chatWindow);
 
         retranslateUi(MainWindow);
 

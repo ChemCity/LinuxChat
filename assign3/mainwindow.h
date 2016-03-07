@@ -20,7 +20,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     int getWindowState();
     void successfulConnection();
-    void Print(char *msg);
+    void ShowChatMessage(char *msg, bool local);
+    void ShowChatMessage(QString text, bool local);
     void updateStatusMessage(const QString &msg);
     void changeWindowState(int welcomeScreen);
     void popup(const char * cc);
