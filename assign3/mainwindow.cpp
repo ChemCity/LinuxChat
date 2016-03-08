@@ -172,7 +172,7 @@ void MainWindow::SendData() {
 void MainWindow::ShowChatMessage(char *msg, bool local) {
   QString text = QString(msg);
   QTime time(QTime::currentTime());
-  ui->chatWindow->insertHtml("<br><style style='color: " + QString((local) ? "green" : "red") + "'>" + "[" + time.toString() + "] " + text + "</style>");
+  ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + "[" + time.toString() + "] " + text.remove(QRegExp("<[^>]*>")) + "</div>");
   ui->chatWindow->append("");
   ui->chatWindow->ensureCursorVisible();
 }
@@ -207,7 +207,7 @@ void MainWindow::ShowChatMessage(char *msg, bool local) {
 ----------------------------------------------------------------------------------------------------------------------*/
 void MainWindow::ShowChatMessage(QString text, bool local) {
     QTime time(QTime::currentTime());
-    ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + "[" + time.toString() + "] " + text + "</div>");
+    ui->chatWindow->insertHtml("<div style='color: " + QString((local) ? "green" : "red") + "'>" + "[" + time.toString() + "] " + text.remove(QRegExp("<[^>]*>")) + "</div>");
     ui->chatWindow->append("");
     ui->chatWindow->ensureCursorVisible();
 }
