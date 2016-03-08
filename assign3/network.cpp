@@ -6,7 +6,7 @@ int sd;
 char name[BUFLEN];
 time_t t;
 struct tm *tm;
-std::atomic_bool SERVER_DISCONNECT (false);
+bool connected;
 
 MainWindow *window;
 
@@ -16,11 +16,9 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
 
   window = w;
   sprintf(name,username);
-	    close(sd);
+	connected = true;
 
-
-
-  if(strcmp(fileName, "NULL") != 0){
+  if(fileName != NULL){
     file = creat(fileName, O_RDWR);
   }
 
@@ -42,11 +40,11 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
       window->updateStatusMessage("Cannot Connect to Server");
       return;
   }else{
+    int flags = fcntl(sd, F_GETFL, 0);
+    fcntl(sd, F_SETFL, flags|O_NONBLOCK);
     window->successfulConnection();
   }
 
-
-  SERVER_DISCONNECT = false;
   std::thread t1(receiveFromServer);
   t1.detach();
 
@@ -62,25 +60,26 @@ void receiveFromServer(){
 
     // client makes repeated calls to recv until no more data is expected to arrive.
     n = 0;
-    while (!SERVER_DISCONNECT && ((n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN)){
+    while (connected && (n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN){
+      if (n == -1){
+        n = 0;
+      }
       bp += n;
       bytes_to_read -= n;
     }
 
 
-    t  = time(NULL);
-    tm = localtime(&t);
-
     window->ShowChatMessage(rbuf, false);
 
-    if(file){
+    if(file && n > 0){
+
+      t  = time(NULL);
+      tm = localtime(&t);
       write(file, asctime(tm), strlen(asctime(tm)));
       write(file, rbuf, strlen(rbuf));
     }
   }
-	if (SERVER_DISCONNECT) {
-	    close(sd);
-	}
+	close(sd);
 }
 
 void sendToServer(const char *msg){
@@ -102,6 +101,5 @@ void disconnectClient(){
     if(file){
         close(file);
     }
-    SERVER_DISCONNECT = true;
-	    close(sd);
+    connected = false;
 }
