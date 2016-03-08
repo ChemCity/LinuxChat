@@ -20,7 +20,7 @@
 
 
 #define SERVER_TCP_PORT		7000	// Default port
-#define BUFLEN			80  	// Buffer length
+#define BUFLEN			1024 	// Buffer length
 
 void sendToServer(const char *msg);
 void receiveFromServer();

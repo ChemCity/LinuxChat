@@ -18,7 +18,9 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
   sprintf(name,username);
 	    close(sd);
 
-  if(fileName != NULL){
+
+
+  if(strcmp(fileName, "NULL") != 0){
     file = creat(fileName, O_RDWR);
   }
 
@@ -65,11 +67,13 @@ void receiveFromServer(){
       bytes_to_read -= n;
     }
 
+
+    t  = time(NULL);
+    tm = localtime(&t);
+
     window->ShowChatMessage(rbuf, false);
 
     if(file){
-      t  = time(NULL);
-      tm = localtime(&t);
       write(file, asctime(tm), strlen(asctime(tm)));
       write(file, rbuf, strlen(rbuf));
     }
