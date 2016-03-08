@@ -54,7 +54,7 @@ void receiveFromServer(){
   char *bp, rbuf[BUFLEN];
   int bytes_to_read, n;
 
-  while(!SERVER_DISCONNECT){
+  while(connected){
     bp = rbuf;
     bytes_to_read = BUFLEN;
 
