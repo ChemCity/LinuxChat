@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #define SERVER_TCP_PORT 7000	// Default port
-#define BUFLEN	80		//Buffer length
+#define BUFLEN	1024		//Buffer length
 #define LISTENQ	5
 
 // Function Prototypes
@@ -125,12 +125,12 @@ int main (int argc, char **argv) {
 					client[i] = -1;
 					//printf("Client %d disconnected\n", i);
 				}
-				
-				
+
+
 				//echos message to all clients except the one that sent it
 				for(int j = 0; j <= maxi; j++){
 					if(client[j] >= 0 && j != i){
-						write(client[j], buf, BUFLEN);   
+						write(client[j], buf, BUFLEN);
 					}
 				}
 				if (--nready <= 0){

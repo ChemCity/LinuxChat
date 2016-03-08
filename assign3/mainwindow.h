@@ -7,6 +7,8 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QDateTime>
+#include "ui_mainwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,8 +36,7 @@ private slots:
     void OnConnectReleased();
     void OnDisconnectReleased();
 
-
-    void on_logChatCheck_stateChanged(int state);
+    void on_logChatCheck_clicked(bool checked);
 
 private:
     Ui::MainWindow *ui;

@@ -311,7 +311,8 @@ compiler_rcc_clean:
 compiler_moc_header_make_all: moc_mainwindow.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp
-moc_mainwindow.cpp: mainwindow.h
+moc_mainwindow.cpp: ui_mainwindow.h \
+		mainwindow.h
 	/usr/lib64/qt5/bin/moc $(DEFINES) -I/usr/lib64/qt5/mkspecs/linux-g++ -I'/home/apalapa/Documents/c4981 - Linux/assign3/github/LinuxChat/assign3' -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/5.3.1 -I/usr/include/c++/5.3.1/x86_64-redhat-linux -I/usr/include/c++/5.3.1/backward -I/usr/lib/gcc/x86_64-redhat-linux/5.3.1/include -I/usr/local/include -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
@@ -332,7 +333,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-main.o: main.cpp mainwindow.h
+main.o: main.cpp mainwindow.h \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
@@ -341,7 +343,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 network.o: network.cpp network.h \
-		mainwindow.h
+		mainwindow.h \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o network.o network.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
