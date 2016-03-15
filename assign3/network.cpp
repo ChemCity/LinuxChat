@@ -134,13 +134,10 @@ void receiveFromServer(){
 
     // client makes repeated calls to recv until no more data is expected to arrive.
     n = 0;
-    while ((n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN){
-	  if(n == -1){
-		if(bytes_to_read == BUFLEN){
-			break;
-		}
-		n = 0;
-	  }
+    while (connected && (n = recv (sd, bp, bytes_to_read, 0)) < BUFLEN){
+      if (n == -1){
+        n = 0;
+      }
       bp += n;
       bytes_to_read -= n;
     }
