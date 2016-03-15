@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[7];
-    char stringdata0[101];
+    char stringdata0[99];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,12 +34,12 @@ QT_MOC_LITERAL(1, 11, 14), // "OnSendReleased"
 QT_MOC_LITERAL(2, 26, 0), // ""
 QT_MOC_LITERAL(3, 27, 17), // "OnConnectReleased"
 QT_MOC_LITERAL(4, 45, 20), // "OnDisconnectReleased"
-QT_MOC_LITERAL(5, 66, 28), // "on_logChatCheck_stateChanged"
-QT_MOC_LITERAL(6, 95, 5) // "state"
+QT_MOC_LITERAL(5, 66, 26), // "onLogChatCheckStateChanged"
+QT_MOC_LITERAL(6, 93, 5) // "state"
 
     },
     "MainWindow\0OnSendReleased\0\0OnConnectReleased\0"
-    "OnDisconnectReleased\0on_logChatCheck_stateChanged\0"
+    "OnDisconnectReleased\0onLogChatCheckStateChanged\0"
     "state"
 };
 #undef QT_MOC_LITERAL
@@ -81,7 +81,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->OnSendReleased(); break;
         case 1: _t->OnConnectReleased(); break;
         case 2: _t->OnDisconnectReleased(); break;
-        case 3: _t->on_logChatCheck_stateChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->onLogChatCheckStateChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
