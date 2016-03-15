@@ -12,9 +12,55 @@
 #define BUFLEN	1024		//Buffer length
 #define LISTENQ	5
 
-// Function Prototypes
-static void SystemFatal(const char* );
+/*------------------------------------------------------------------------------------------------------------------
+--  SOURCE FILE:    a3s.cpp -   A file which handles the server side of the chat
+--                                     client program.
+--
+--  PROGRAM:        ChatClient
+--
+--  FUNCTIONS:      static void SystemFatal(const char *)
+--		    int main (int argc, char **argv)
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  NOTES:
+--  This file contains server side code including the select call that allows for client multiplexing
+--
+----------------------------------------------------------------------------------------------------------------------*/
 
+
+static void SystemFatal(const char *);
+
+
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       main
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      int main (int argc, char **argv)
+--		    int argc     number of command line arguments
+--                  char **argv  array of command line arguments
+--
+--
+--  RETURNS:        int  program return value
+--
+--  NOTES:
+--  Entry point of the application. It initializes the server socket and sets up the select call.
+--  Then it waits for client connections and client messages before echoing them back.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 int main (int argc, char **argv) {
 	int i, maxi, nready, bytes_to_read, arg;
 	int listen_sd, new_sd, port, maxfd, client[FD_SETSIZE];
@@ -142,7 +188,27 @@ int main (int argc, char **argv) {
 	return(0);
 }
 
-// Prints the error stored in errno and aborts the program.
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       SystemFatal
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      static void SystemFatal(const char* message)
+--		    const char* message  error message to be printed
+--
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  Prints the error stored in errno and aborts the program.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 static void SystemFatal(const char* message){
     perror (message);
     exit (EXIT_FAILURE);

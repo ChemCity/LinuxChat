@@ -1,6 +1,31 @@
 #include "network.h"
 #include "mainwindow.h"
 
+/*------------------------------------------------------------------------------------------------------------------
+--  SOURCE FILE:    network.cpp -   A file which handles the network layer of the client side of the chat
+--                                     client program.
+--
+--  PROGRAM:        ChatClient
+--
+--  FUNCTIONS:      void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName)
+--		    void receiveFromServer()			
+--		    void sendToServer(const char *msg)
+--		    void disconnectClient()	
+--
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  NOTES:
+--  This file contains the client side networking code
+--
+----------------------------------------------------------------------------------------------------------------------*/
+
 int file = 0;
 int sd;
 char name[BUFLEN];
@@ -10,6 +35,31 @@ bool connected;
 
 MainWindow *window;
 
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       startConnection
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName)
+--		        MainWindow *w         pointer to main ui window                      
+--		        const char *username  username
+--			const char *IP        IP to connect to
+--			int port              port number to bind too
+--			const char *fileName  file to dump user data
+--
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  This method initializes the server connection and sends up the file dump if needed
+--
+----------------------------------------------------------------------------------------------------------------------*/
 void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName){
   struct hostent	*hp;
   struct sockaddr_in server;
@@ -54,6 +104,26 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
 
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       receiveFromServer
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      void receiveFromServer()
+--
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  This function polls for server messages and sends the messages to be shown on the UI
+--
+----------------------------------------------------------------------------------------------------------------------*/
 void receiveFromServer(){
   char *bp, rbuf[BUFLEN];
   int bytes_to_read, n;
@@ -90,6 +160,27 @@ void receiveFromServer(){
 
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       sendToServer
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      void sendToServer(const char *msg)
+--			const char *msg  message to be sent to the server
+--
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  This function sends message to the server
+--
+----------------------------------------------------------------------------------------------------------------------*/
 void sendToServer(const char *msg){
   char sbuf[BUFLEN];
   sprintf(sbuf,"%s: %s",name, msg);
@@ -105,6 +196,26 @@ void sendToServer(const char *msg){
   }
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       disconnectClient
+--
+--  DATE:           March 14th, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Tom Tang
+--
+--  PROGRAMMER:     Tom Tang
+--
+--  INTERFACE:      void disconnectClient()
+--
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  This function signals for the network to disconnect and closes the file handler
+--
+----------------------------------------------------------------------------------------------------------------------*/
 void disconnectClient(){
     if(file){
         close(file);
