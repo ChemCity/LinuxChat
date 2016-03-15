@@ -334,6 +334,7 @@ void MainWindow::updateStatusMessage(const QString &msg) {
 void MainWindow::OnDisconnectReleased()
 {
     disconnectClient();
+
     if (getWindowState() == WINDOW_CHATSCREEN) {
         changeWindowState(WINDOW_WELCOME);
     }
