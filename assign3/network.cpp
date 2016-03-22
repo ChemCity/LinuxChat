@@ -32,8 +32,6 @@ char name[BUFLEN];
 time_t t;
 struct tm *tm;
 bool connected;
-fd_set fdset;
-struct timeval tv;
 
 MainWindow *window;
 
@@ -65,6 +63,8 @@ MainWindow *window;
 void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName){
   struct hostent	*hp;
   struct sockaddr_in server;
+  fd_set fdset;
+  struct timeval tv;
   int rv;
 
   window = w;
@@ -114,21 +114,10 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
             window->successfulConnection();
         }
     } else if (rv == 0)
-        {
-	    window->updateStatusMessage("Cannot Connect to Server");
-	    return;
-        }
-
-
-
-  /*if (connect (sd, (struct sockaddr *)&server, sizeof(server)) == -1){
-      window->updateStatusMessage("Cannot Connect to Server");
-      return;
-  }else{
-    int flags = fcntl(sd, F_GETFL, 0);
-    fcntl(sd, F_SETFL, flags|O_NONBLOCK);
-    window->successfulConnection();
-  }*/
+    {
+	window->updateStatusMessage("Cannot Connect to Server");
+	return;
+    }
 
   std::thread t1(receiveFromServer);
   t1.detach();
