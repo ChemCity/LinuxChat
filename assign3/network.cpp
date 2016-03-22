@@ -63,6 +63,9 @@ MainWindow *window;
 void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName){
   struct hostent	*hp;
   struct sockaddr_in server;
+  fd_set fdset;
+  struct timeval tv;
+  int rv;
 
   window = w;
   sprintf(name,username);
@@ -90,14 +93,31 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
   bcopy(hp->h_addr, (char *)&server.sin_addr, hp->h_length);
 
   // Connecting to the server
-  if (connect (sd, (struct sockaddr *)&server, sizeof(server)) == -1){
-      window->updateStatusMessage("Cannot Connect to Server");
-      return;
-  }else{
-    int flags = fcntl(sd, F_GETFL, 0);
-    fcntl(sd, F_SETFL, flags|O_NONBLOCK);
-    window->successfulConnection();
-  }
+    fcntl(sd, F_SETFL, O_NONBLOCK);
+    connect (sd, (struct sockaddr *)&server, sizeof(server));
+
+    FD_ZERO(&fdset);
+    FD_SET(sd, &fdset);
+    tv.tv_sec = 10;             /* 10 second timeout */
+    tv.tv_usec = 0;
+
+    if ((rv = select(sd+1, NULL, &fdset, NULL, &tv)) == 1)
+    {
+	int so_error;
+        socklen_t len = sizeof so_error;
+
+        getsockopt(sd, SOL_SOCKET, SO_ERROR, &so_error, &len);
+
+        if (so_error == 0) {
+            int flags = fcntl(sd, F_GETFL, 0);
+            fcntl(sd, F_SETFL, flags|O_NONBLOCK);
+            window->successfulConnection();
+        }
+    } else if (rv == 0)
+    {
+	window->updateStatusMessage("Cannot Connect to Server");
+	return;
+    }
 
   std::thread t1(receiveFromServer);
   t1.detach();
