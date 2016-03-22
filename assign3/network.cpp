@@ -151,6 +151,7 @@ void receiveFromServer(){
       tm = localtime(&t);
       write(file, asctime(tm), strlen(asctime(tm)));
       write(file, rbuf, strlen(rbuf));
+      write(file,"\n",1);
     }
   }
   close(sd);
