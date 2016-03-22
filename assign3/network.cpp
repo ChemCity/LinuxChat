@@ -77,8 +77,8 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
       return;
   }
   
-  int flags = fcntl(fd, F_GETFL, 0);
-  fcntl(fd, F_SETFL, flags|O_NONBLOCK);
+  int flags = fcntl(file, F_GETFL, 0);
+  fcntl(file, F_SETFL, flags|O_NONBLOCK);
   
   bzero((char *)&server, sizeof(struct sockaddr_in));
   server.sin_family = AF_INET;
