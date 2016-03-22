@@ -39,7 +39,7 @@ QT_MOC_LITERAL(6, 93, 5) // "state"
 
     },
     "MainWindow\0OnSendReleased\0\0OnConnectReleased\0"
-    "OnDisconnectReleased\0onLogChatCheckStateChanged\0"
+    "OnDisconnectReleased\0on_logChatCheck_clicked\0"
     "state"
 };
 #undef QT_MOC_LITERAL
@@ -81,7 +81,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->OnSendReleased(); break;
         case 1: _t->OnConnectReleased(); break;
         case 2: _t->OnDisconnectReleased(); break;
-        case 3: _t->onLogChatCheckStateChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->on_logChatCheck_clicked((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
