@@ -134,7 +134,7 @@ void MainWindow::SendData() {
     }
     QString text = ui->sendWindow->toPlainText();
     std::string msg (text.toStdString());
-    sendToServer(msg.c_str());
+    sendToServer(msg.c_str(), false);
 
     ui->sendWindow->moveCursor(QTextCursor::Start);
     ui->sendWindow->insertPlainText(ui->nameWindow->text() + ": ");
@@ -338,6 +338,7 @@ void MainWindow::OnDisconnectReleased()
     if (getWindowState() == WINDOW_CHATSCREEN) {
         changeWindowState(WINDOW_WELCOME);
     }
+    ui->sendWindow->clear();
 }
 
 
