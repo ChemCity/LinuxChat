@@ -9,13 +9,13 @@
 --
 --  FUNCTIONS:      void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName)
 --		    void receiveFromServer()			
---		    void sendToServer(const char *msg)
+--		    void sendToServer(const char *msg, bool sysMsg)
 --		    void disconnectClient()	
 --
 --
 --  DATE:           March 14th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - connection timeout, joined/left chat messages (Gabriella Cheung)
 --
 --  DESIGNER:       Tom Tang
 --
@@ -40,7 +40,8 @@ MainWindow *window;
 --
 --  DATE:           March 14th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - added "joined chat" message (Gabriella Cheung)
+--		    March 22nd, 2016 - added connection timeout (Gabriella Cheung)
 --
 --  DESIGNER:       Tom Tang
 --
@@ -111,7 +112,7 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
         if (so_error == 0) {
             int flags = fcntl(sd, F_GETFL, 0);
             fcntl(sd, F_SETFL, flags|O_NONBLOCK);
-	    sendToServer(" joined the chat");
+	    sendToServer(" joined the chat", true);
             window->successfulConnection();
         }
     } else if (rv == 0)
@@ -184,14 +185,15 @@ void receiveFromServer(){
 --
 --  DATE:           March 14th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - added message formatting flag (Gabriella Cheung)
 --
 --  DESIGNER:       Tom Tang
 --
 --  PROGRAMMER:     Tom Tang
 --
---  INTERFACE:      void sendToServer(const char *msg)
+--  INTERFACE:      void sendToServer(const char *msg, bool sysMsg)
 --			const char *msg  message to be sent to the server
+--			bool sysMsg  flag for message formatting
 --
 --
 --  RETURNS:        void
@@ -200,9 +202,15 @@ void receiveFromServer(){
 --  This function sends message to the server
 --
 ----------------------------------------------------------------------------------------------------------------------*/
-void sendToServer(const char *msg){
+void sendToServer(const char *msg, bool sysMsg){
   char sbuf[BUFLEN];
-  sprintf(sbuf,"%s: %s",name, msg);
+  if (sysMsg)
+  {
+    sprintf(sbuf,"%s %s",name, msg);
+  } else
+  {
+    sprintf(sbuf,"%s: %s",name, msg);
+  }
   send (sd, sbuf, BUFLEN, 0);
 
 
@@ -220,7 +228,7 @@ void sendToServer(const char *msg){
 --
 --  DATE:           March 14th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - added disconnect message (Gabriella Cheung)
 --
 --  DESIGNER:       Tom Tang
 --
@@ -236,7 +244,7 @@ void sendToServer(const char *msg){
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 void disconnectClient(){
-    sendToServer(" left the chat");
+    sendToServer(" left the chat", true);
     if(file){
         close(file);
     }

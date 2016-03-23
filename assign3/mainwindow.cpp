@@ -134,7 +134,7 @@ void MainWindow::SendData() {
     }
     QString text = ui->sendWindow->toPlainText();
     std::string msg (text.toStdString());
-    sendToServer(msg.c_str());
+    sendToServer(msg.c_str(), false);
 
     ui->sendWindow->moveCursor(QTextCursor::Start);
     ui->sendWindow->insertPlainText(ui->nameWindow->text() + ": ");
@@ -247,13 +247,13 @@ void MainWindow::OnConnectReleased()
         QMessageBox::information(this, tr("Chat Client"), tr("Enter a port number!"));
         return;
     }
-    updateStatusMessage("Attempting to Connect...");
     std::string username(ui->nameWindow->text().toUtf8().constData());
     std::string IP(ui->ipWindow->text().toUtf8().constData());
     int port = atoi(ui->portWindow->text().toUtf8().constData());
     std::string filePath((ui->logChatCheck->isChecked()) ? ui->logfileWindow->text().toUtf8().constData() : "NULL");
 
     startConnection(this, username.c_str(), IP.c_str(), port, filePath.c_str());
+    updateStatusMessage("Attempting to Connect...");
 
 }
 
@@ -338,6 +338,7 @@ void MainWindow::OnDisconnectReleased()
     if (getWindowState() == WINDOW_CHATSCREEN) {
         changeWindowState(WINDOW_WELCOME);
     }
+    ui->sendWindow->clear();
 }
 
 

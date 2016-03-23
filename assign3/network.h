@@ -22,7 +22,7 @@
 #define SERVER_TCP_PORT		7000	// Default port
 #define BUFLEN			1024 	// Buffer length
 
-void sendToServer(const char *msg);
+void sendToServer(const char *msg, bool sysMsg);
 void receiveFromServer();
 void startConnection(MainWindow *w, const char *username, const char *IP , int port, const char *fileName);
 void disconnectClient();
