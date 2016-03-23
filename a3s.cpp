@@ -7,6 +7,7 @@
 #include <strings.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <string>
 
 #define SERVER_TCP_PORT 7000	// Default port
 #define BUFLEN	1024		//Buffer length
@@ -36,7 +37,7 @@
 
 
 static void SystemFatal(const char *);
-
+void printAllAddresses(std::string *);
 
 /*------------------------------------------------------------------------------------------------------------------
 --  FUNCTION:       main
@@ -69,6 +70,7 @@ int main (int argc, char **argv) {
 	char *bp, buf[BUFLEN];
    	ssize_t n;
    	fd_set rset, allset;
+   	std::string clientAddresses[FD_SETSIZE];
 
 	switch(argc) {
 		case 1:
@@ -129,6 +131,7 @@ int main (int argc, char **argv) {
 			for (i = 0; i < FD_SETSIZE; i++){
 				if (client[i] < 0){
 					client[i] = new_sd;	// save descriptor
+					clientAddresses[i] = inet_ntoa(client_addr.sin_addr);
 					break;
 				}
 			}
@@ -136,7 +139,7 @@ int main (int argc, char **argv) {
 				printf ("Too many clients\n");
 				continue;
 			}
-
+			printAllAddresses(clientAddresses);
 			FD_SET (new_sd, &allset);     // add new descriptor to set
 			if (new_sd > maxfd){
 				maxfd = new_sd;	// for select
@@ -155,12 +158,9 @@ int main (int argc, char **argv) {
 				continue;
 			}
 			if (FD_ISSET(client[i], &rset)){
-				printf("client %d is set\n", i);
 				bp = buf;
 				bytes_to_read = BUFLEN;
-				//while ((n = read(client[i], bp, bytes_to_read)) > 0){
 				n = read(client[i], bp, bytes_to_read);
-				printf("Read %d bytes from client %d\n", n, i);
 				if (n > 0){
 					bp += n;
 					bytes_to_read -= n;
@@ -169,9 +169,9 @@ int main (int argc, char **argv) {
 					printf("Client %d disconnected\n", i);
 					FD_CLR(client[i], &rset);
 					client[i] = -1;
-					//printf("Client %d disconnected\n", i);
+					clientAddresses[i] = "";
+					printAllAddresses(clientAddresses);
 				}
-
 
 				//echos message to all clients except the one that sent it
 				for(int j = 0; j <= maxi; j++){
@@ -212,4 +212,46 @@ int main (int argc, char **argv) {
 static void SystemFatal(const char* message){
     perror (message);
     exit (EXIT_FAILURE);
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+--  FUNCTION:       printAllAddresses
+--
+--  DATE:           March 22nd, 2016
+--
+--  REVISIONS:      None
+--
+--  DESIGNER:       Gabriella Cheung
+--
+--  PROGRAMMER:     Gabriella Cheung
+--
+--  INTERFACE:      void printAllAddresses(std::string * addresses)
+--					std::string * addresses - array of client IP addresses stored as strings
+--
+--  RETURNS:        void
+--
+--  NOTES:
+--  Prints the IP addresses of all clients that are connected to the server.
+--
+----------------------------------------------------------------------------------------------------------------------*/
+
+void printAllAddresses(std::string * addresses)
+{
+	bool hasClients = false;
+
+	printf("Connected clients:\n");
+	for (int i = 0; i < FD_SETSIZE; i++)
+	{
+		//if (!(clientAddresses[i].empty()))
+		if (!(addresses[i].empty()))
+		{
+			//printf("%s\n", clientAddresses[i].c_str());
+			printf("%s\n", addresses[i].c_str());
+			hasClients = true;
+		}
+	}
+	if(!hasClients)
+	{
+		printf("(none)\n");
+	}
 }
