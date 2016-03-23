@@ -112,7 +112,8 @@ void MainWindow::OnSendReleased()
 --
 --  DATE:           March 7th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - check message length to make sure it is not too long, truncate message if it is
+--                                      (Gabriella Cheung)
 --
 --  DESIGNER:       Jaegar Sarauer
 --
@@ -134,7 +135,20 @@ void MainWindow::SendData() {
     }
     QString text = ui->sendWindow->toPlainText();
     std::string msg (text.toStdString());
-    sendToServer(msg.c_str(), false);
+    std::string name = ui->nameWindow->text().toStdString();
+    if ((msg.length() + name.length() + 2) > 1023)
+    {
+        char message[1024];
+        size_t msglen = 1023 - name.length() - 2;
+
+        //truncate message before sending
+        strncpy(message, msg.c_str(), msglen);
+        message[msglen] = '\0';
+        sendToServer(message, false);
+    } else
+    {
+        sendToServer(msg.c_str(), false);
+    }
 
     ui->sendWindow->moveCursor(QTextCursor::Start);
     ui->sendWindow->insertPlainText(ui->nameWindow->text() + ": ");
@@ -513,7 +527,7 @@ MainWindow::~MainWindow()
 
 
 /*------------------------------------------------------------------------------------------------------------------
---  FUNCTION:       This func
+--  FUNCTION:       on_logChatCheck_clicked
 --
 --  DATE:           March 7th, 2016
 --
