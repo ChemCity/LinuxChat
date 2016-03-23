@@ -171,6 +171,7 @@ int main (int argc, char **argv) {
 					client[i] = -1;
 					clientAddresses[i] = "";
 					printAllAddresses(clientAddresses);
+					break;
 				}
 
 				//echos message to all clients except the one that sent it
