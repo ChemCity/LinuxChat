@@ -242,10 +242,8 @@ void printAllAddresses(std::string * addresses)
 	printf("Connected clients:\n");
 	for (int i = 0; i < FD_SETSIZE; i++)
 	{
-		//if (!(clientAddresses[i].empty()))
 		if (!(addresses[i].empty()))
 		{
-			//printf("%s\n", clientAddresses[i].c_str());
 			printf("%s\n", addresses[i].c_str());
 			hasClients = true;
 		}
