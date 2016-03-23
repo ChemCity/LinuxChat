@@ -261,7 +261,7 @@ void MainWindow::OnConnectReleased()
         QMessageBox::information(this, tr("Chat Client"), tr("Enter a port number!"));
         return;
     }
-    updateStatusMessage("Attempting to Connect...");
+    //updateStatusMessage("Attempting to Connect...");
     std::string username(ui->nameWindow->text().toUtf8().constData());
     std::string IP(ui->ipWindow->text().toUtf8().constData());
     int port = atoi(ui->portWindow->text().toUtf8().constData());
