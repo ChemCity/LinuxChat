@@ -295,6 +295,7 @@ void MainWindow::OnConnectReleased()
 ----------------------------------------------------------------------------------------------------------------------*/
 void MainWindow::successfulConnection() {
     changeWindowState(WINDOW_CHATSCREEN);
+    ui->chatWindow->clear();
 }
 
 

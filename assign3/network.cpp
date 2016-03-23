@@ -112,7 +112,7 @@ void startConnection(MainWindow *w, const char *username, const char *IP , int p
         if (so_error == 0) {
             int flags = fcntl(sd, F_GETFL, 0);
             fcntl(sd, F_SETFL, flags|O_NONBLOCK);
-	    sendToServer(" joined the chat", true);
+	    sendToServer("joined the chat", true);
             window->successfulConnection();
         }
     } else if (rv == 0)
@@ -244,7 +244,7 @@ void sendToServer(const char *msg, bool sysMsg){
 --
 ----------------------------------------------------------------------------------------------------------------------*/
 void disconnectClient(){
-    sendToServer(" left the chat", true);
+    sendToServer("left the chat", true);
     if(file){
         close(file);
     }
