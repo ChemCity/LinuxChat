@@ -116,7 +116,7 @@ int main (int argc, char **argv) {
 	FD_ZERO(&allset);
 	FD_SET(listen_sd, &allset);
 
-	printf("Server is ready for incoming connections on port %d\n", SERVER_TCP_PORT); 
+	printf("Server is ready for incoming connections on port %d\n", port); 
 	while (1){
 		rset = allset;               // structure assignment
 		nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
