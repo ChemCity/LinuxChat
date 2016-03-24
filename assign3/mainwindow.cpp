@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->disconnectButton, SIGNAL (released()),this, SLOT (OnDisconnectReleased()));
     ui->portWindow->setValidator( new QIntValidator(1, 100000, this) );
     changeWindowState(WINDOW_WELCOME);
+    this->setWindowTitle("Linux Chat Program");
 }
 
 
@@ -296,6 +297,9 @@ void MainWindow::OnConnectReleased()
 void MainWindow::successfulConnection() {
     changeWindowState(WINDOW_CHATSCREEN);
     ui->chatWindow->clear();
+    std::string name = ui->nameWindow->text().toStdString();
+    std::string title = std::string("Connected to chat as \"") + name + std::string("\"");
+    this->setWindowTitle(title.c_str());
 }
 
 
@@ -352,6 +356,7 @@ void MainWindow::OnDisconnectReleased()
 
     if (getWindowState() == WINDOW_CHATSCREEN) {
         changeWindowState(WINDOW_WELCOME);
+        this->setWindowTitle("Linux Chat Program");
     }
     ui->sendWindow->clear();
 }
