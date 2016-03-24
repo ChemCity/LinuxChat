@@ -234,7 +234,7 @@ void MainWindow::ShowChatMessage(QString text, bool local) {
 --
 --  DATE:           March 7th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - changed logic to handle empty log file name (Gabriella Cheung)
 --
 --  DESIGNER:       Jaegar Sarauer
 --
@@ -266,10 +266,17 @@ void MainWindow::OnConnectReleased()
     std::string username(ui->nameWindow->text().toUtf8().constData());
     std::string IP(ui->ipWindow->text().toUtf8().constData());
     int port = atoi(ui->portWindow->text().toUtf8().constData());
-    std::string filePath((ui->logChatCheck->isChecked()) ? ui->logfileWindow->text().toUtf8().constData() : "NULL");
-
-    startConnection(this, username.c_str(), IP.c_str(), port, filePath.c_str());
-
+    if (ui->logChatCheck->isChecked())
+    {
+        std::string filePath(ui->logfileWindow->text().toUtf8().constData());
+        if (filePath.empty())
+        {
+            filePath = std::string("chatlog.txt");
+        }
+        startConnection(this, username.c_str(), IP.c_str(), port, filePath.c_str());
+    } else {
+        startConnection(this, username.c_str(), IP.c_str(), port, NULL);
+    }
 }
 
 
@@ -279,7 +286,7 @@ void MainWindow::OnConnectReleased()
 --
 --  DATE:           March 7th, 2016
 --
---  REVISIONS:      None
+--  REVISIONS:      March 23rd, 2016 - changed title to display user name (Gabriella Cheung)
 --
 --  DESIGNER:       Jaegar Sarauer
 --
